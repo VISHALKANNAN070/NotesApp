@@ -59,7 +59,7 @@ const NoteDetailPage = () => {
     fetchNote();
   }, [id]);
 
-  if (true) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center">
         <LoaderIcon className="animate-spin size-10" />
