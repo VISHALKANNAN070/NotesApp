@@ -14,6 +14,7 @@ const PORT = process.env.PORT;
 app.use(cors({
   origin: process.env.CLIENT_URL,
 }));
+
 app.use(express.json());
 app.use(rateLimiter);
 
