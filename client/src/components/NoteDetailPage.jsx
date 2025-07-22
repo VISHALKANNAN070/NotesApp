@@ -61,7 +61,7 @@ const NoteDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="absolute min-h-screen bg-base-100 flex items-center justify-center">
+      <div className="min-h-screen bg-base-100 flex items-center justify-center">
         <LoaderIcon className="animate-spin size-10" />
       </div>
     );
