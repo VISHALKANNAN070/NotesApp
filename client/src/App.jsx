@@ -1,11 +1,9 @@
-import React from "react";
 import { Routes, Route } from "react-router";
-import {toast} from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import CreatePage from "./components/CreatePage";
 import NoteDetailPage from "./components/NoteDetailPage";
 
-const App = () => {
+const App = () => { 
   return (
     <>
     <div data-theme="luxury" className="bg-base-100 min-h-screen">
