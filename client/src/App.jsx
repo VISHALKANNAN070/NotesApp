@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router";
-import {toast} from "react-hot-toast";
 import HomePage from "./components/HomePage";
 import CreatePage from "./components/CreatePage";
 import NoteDetailPage from "./components/NoteDetailPage";
