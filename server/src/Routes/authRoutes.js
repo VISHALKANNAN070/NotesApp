@@ -39,8 +39,8 @@ router.get(
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       maxAge: 6 * 60 * 60 * 1000,
     });
     res.redirect(process.env.CLIENT_URL);
