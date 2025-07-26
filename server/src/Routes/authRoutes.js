@@ -49,8 +49,17 @@ router.get(
 );
 
 router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.status(200).json({ message: "Logged out successfully" });
+  req.logout(function (err) {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed", error: err });
+    }
+
+    res.clearCookie("token");
+    req.session?.destroy(() => {
+      res.status(200).json({ message: "Logged out successfully" });
+    });
+  });
 });
+
 
 export default router;
