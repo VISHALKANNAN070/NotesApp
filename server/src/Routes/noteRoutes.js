@@ -1,20 +1,29 @@
 import express from "express";
 import Note from "../model/Note.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
-    const notes = await Note.find().sort({ createdAt: -1 });
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const notes = await Note.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(notes);
   } catch (error) {
     console.error("Error fetching notes:", error);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const note = await Note.findById(req.params.id, userId);
     if (!note) {
       return res.status(404).json({ message: "Note not found" });
     }
@@ -25,10 +34,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const { title, content } = req.body;
-    const newNote = new Note({ title, content });
+    const newNote = new Note({ title, content, userId });
     await newNote.save();
     res.status(201).json({ message: "Note created successfully" });
   } catch (error) {
@@ -37,11 +50,15 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const { title, content } = req.body;
     const updatedNote = await Note.findByIdAndUpdate(
-      req.params.id,
+      {_id:req.params.id,userId},
       { title, content },
       { new: true }
     );
@@ -55,9 +72,13 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    const deletedNote = await Note.findByIdAndDelete(req.params.id);
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const deletedNote = await Note.findByIdAndDelete({_id:req.params.id, userId });
     if (!deletedNote) {
       return res.status(404).json({ message: "Note not found" });
     }
