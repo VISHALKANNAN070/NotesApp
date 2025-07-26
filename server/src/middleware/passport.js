@@ -16,7 +16,7 @@ async(accessToken,refreshToken,profile,done)=>{
         if(!email){
             return done(new Error("No email found in Google profile"), null);
         }
-        let user= await User.findOne({email})
+        let user= await User.findOne({googleId})
         if(!user){
             user = await User.create({
                 name:profile.displayName,
@@ -24,10 +24,10 @@ async(accessToken,refreshToken,profile,done)=>{
                 googleId:profile.id
             })
         }
+        return done(null,user)
     }
     catch(err){
         return done(err, null);
     }
-    return done(null,user)
 }
 ))
