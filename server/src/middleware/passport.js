@@ -11,15 +11,22 @@ passport.use(new GoogleStrategy({
     callbackURL:process.env.SERVER_URL + "/api/auth/google/callback"
 },
 async(accessToken,refreshToken,profile,done)=>{
-    const email = profile.emails[0].value
-
-    let user = await User.findOne({email})
-    if(!user){
-        user = await User.create({
-            name:profile.displayName,
-            email:email,
-            googleId:profile.id
-        })
+    try{
+        const email = profile.emails[0].value
+        if(!email){
+            return done(new Error("No email found in Google profile"), null);
+        }
+        let user= await User.findOne({email})
+        if(!user){
+            user = await User.create({
+                name:profile.displayName,
+                email:email,
+                googleId:profile.id
+            })
+        }
+    }
+    catch(err){
+        return done(err, null);
     }
     return done(null,user)
 }
