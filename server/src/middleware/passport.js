@@ -6,28 +6,34 @@ import User from '../model/User.js';
 dotenv.config();
 
 passport.use(new GoogleStrategy({
-    clientID:process.env.GOOGLE_CLIENT_ID,
-    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:process.env.SERVER_URL + "/api/auth/google/callback"
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.SERVER_URL + "/api/auth/google/callback"
 },
-async(accessToken,refreshToken,profile,done)=>{
-    try{
-        const email = profile.emails[0].value
-        if(!email){
-            return done(new Error("No email found in Google profile"), null);
-        }
-        let user= await User.findOne({googleId})
-        if(!user){
-            user = await User.create({
-                name:profile.displayName,
-                email:email,
-                googleId:profile.id
-            })
-        }
-        return done(null,user)
+async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.emails[0].value;
+    if (!email) {
+      return done(new Error("No email found in Google profile"), null);
     }
-    catch(err){
-        return done(err, null);
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        name: profile.displayName,
+        email,
+        authProvider: "google",
+        providerId: profile.id,
+      });
+    } else if (!user.providerId) {
+      user.providerId = profile.id;
+      user.authProvider = "google";
+      await user.save();
     }
-}
-))
+
+    return done(null, user);
+  } catch (err) {
+    return done(err, null);
+  }
+}));
