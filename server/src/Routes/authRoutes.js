@@ -50,9 +50,7 @@ router.get(
 
 router.get("/logout", (req, res) => {
     res.clearCookie("token");
-    req.session?.destroy(() => {
       res.status(200).json({ message: "Logged out successfully" });
-    });
   });
 
 export default router;
