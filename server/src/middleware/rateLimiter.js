@@ -7,9 +7,7 @@ const rateLimiter = async (req, res, next) => {
       return res.status(400).json({ message: "Google ID is required." });
     }
     const { success } = await ratelimit.limit({ id:googleId });
-    if (!googleId) {
-      return res.status(400).json({ message: "Google ID is required." });
-    }
+
     if (!success) {
       return res
         .status(429)
