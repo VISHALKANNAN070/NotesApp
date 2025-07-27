@@ -23,12 +23,10 @@ async (accessToken, refreshToken, profile, done) => {
       user = await User.create({
         name: profile.displayName,
         email,
-        authProvider: "google",
-        providerId: profile.id,
+        googleId: profile.id,
       });
-    } else if (!user.providerId) {
-      user.providerId = profile.id;
-      user.authProvider = "google";
+    } else if (!user.googleId) {
+      user.googleId = profile.id;
       await user.save();
     }
 
