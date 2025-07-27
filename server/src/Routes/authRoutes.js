@@ -35,7 +35,8 @@ router.get(
     failureRedirect: "/login",
   }),
   (req, res) => {
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+    const {_id, googleId, email} = req.user;
+    const token = jwt.sign({ id:_id,googleId,email }, process.env.JWT_SECRET, {
       expiresIn: "3h",
     });
     res.cookie("token", token, {
