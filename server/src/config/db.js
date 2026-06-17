@@ -4,13 +4,21 @@ dotenv.config();
 
 const { Pool } = pg;
 
-const db = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-});
+const db =
+  process.env.DEPLOYMENT_TYPE === "production"
+    ? new Pool({
+        connectionString: process.env.DB_URL,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      })
+    : new Pool({
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASSWORD,
+      });
 
 try {
   await db.query("SELECT 1");
