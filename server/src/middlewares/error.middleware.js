@@ -14,10 +14,12 @@ const errorMiddleware = (err, req, res, next) => {
   }
 
   if (err.code === "23503") {
-    return res.status(400).json({ message: "Foreign key constraint violation" });
+    return res
+      .status(400)
+      .json({ message: "Foreign key constraint violation" });
   }
 
   res.status(500).json({ message: "Server error" });
 };
 
-export default errorMiddleware
+export default errorMiddleware;

@@ -29,8 +29,8 @@ export const updateNote = async (userId, noteId, title, content) => {
   return result.rows[0];
 };
 export const deleteNote = async (userId, noteId) => {
-  await db.query(`delete from notes where id = $1 and user_id = $2 returning *`, [
-    noteId,
-    userId,
-  ]);
+  await db.query(
+    `delete from notes where id = $1 and user_id = $2 returning *`,
+    [noteId, userId],
+  );
 };

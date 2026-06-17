@@ -4,7 +4,7 @@ import {
   findUserByUserId,
   createUser,
 } from "../services/auth.service.js";
-import { deleteUser } from "../services/auth.service.js"; 
+import { deleteUser } from "../services/auth.service.js";
 import { generateToken } from "../middlewares/auth.middleware.js";
 
 export const register = async (req, res, next) => {
@@ -60,9 +60,10 @@ export const login = async (req, res, next) => {
     const token = generateToken(user.id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.DEPLOYMENT_TYPE === "production",
       sameSite: "lax",
     });
+
     return res.status(200).json({
       message: "Login Successful",
     });
