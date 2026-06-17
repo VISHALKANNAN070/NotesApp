@@ -1,4 +1,4 @@
-create table users (
+create table if not exists users (
     id serial primary key,
     name varchar(50) not null,
     email varchar(255) unique not null,
@@ -6,7 +6,7 @@ create table users (
     created_at timestamptz default now()
 );
 
-create table notes (
+create table if not exists notes (
     id serial primary key,
     user_id integer not null,
     title varchar(255) not null,

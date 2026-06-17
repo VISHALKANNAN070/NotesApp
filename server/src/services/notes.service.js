@@ -23,13 +23,13 @@ export const getNoteById = async (userId, noteId) => {
 };
 export const updateNote = async (userId, noteId, title, content) => {
   const result = await db.query(
-    `update notes set title = $1, content = $2, updated_at = default now() where id = $3 and user_id = $4 returning *`,
+    `update notes set title = $1, content = $2, updated_at = now() where id = $3 and user_id = $4 returning *`,
     [title, content, noteId, userId],
   );
   return result.rows[0];
 };
 export const deleteNote = async (userId, noteId) => {
-  await db.query(`delete from notes where id = $1 and user_id = $2`, [
+  await db.query(`delete from notes where id = $1 and user_id = $2 returning *`, [
     noteId,
     userId,
   ]);

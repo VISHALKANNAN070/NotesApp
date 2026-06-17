@@ -4,6 +4,9 @@ export const createNote = async (req, res, next) => {
   try {
     const userId = req.user.userId;
     const { title, content } = req.body;
+    if (!title || typeof title !== "string" || title.trim().length === 0) {
+      return res.status(400).json({ message: "Title is required" });
+    }
     const note = await NotesService.createNote(userId, title, content);
     return res.status(201).json(note);
   } catch (error) {
@@ -25,6 +28,9 @@ export const getNoteById = async (req, res, next) => {
   try {
     const userId = req.user.userId;
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({ message: "Invalid note ID" });
+    }
     const note = await NotesService.getNoteById(userId, id);
     return res.status(200).json(note);
   } catch (error) {
@@ -37,6 +43,9 @@ export const updateNote = async (req, res, next) => {
     const userId = req.user.userId;
     const { title, content } = req.body;
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({ message: "Invalid note ID" });
+    }
     const note = await NotesService.updateNote(userId, id, title, content);
     return res.status(200).json({ note, message: "Updated Note" });
   } catch (error) {
@@ -48,6 +57,9 @@ export const deleteNote = async (req, res, next) => {
   try {
     const userId = req.user.userId;
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({ message: "Invalid note ID" });
+    }
     await NotesService.deleteNote(userId, id);
     return res.status(200).json({ message: "Deleted Note" });
   } catch (error) {
