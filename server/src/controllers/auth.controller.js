@@ -37,7 +37,7 @@ export const register = async (req, res, next) => {
     const user = await createUser(name, email, passwordHash);
     return res
       .status(201)
-      .json({ id: user.id, name: user.name, email: user.email });
+      .json({ message: "Register Successful", user: { id: user.id, name: user.name, email: user.email } });
   } catch (error) {
     next(error);
   }
@@ -65,6 +65,7 @@ export const login = async (req, res, next) => {
     });
 
     return res.status(200).json({
+      user:{id:user.id,name:user.name,email:user.email},
       message: "Login Successful",
     });
   } catch (error) {
@@ -74,7 +75,11 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.DEPLOYMENT_TYPE === "production",
+      sameSite: "lax",
+    });
     return res.status(200).json({ message: "Logout Successful" });
   } catch (error) {
     next(error);
